@@ -70,16 +70,26 @@ void Joc::inicialitzaNovaFigura()
 	m_figuraActual = novaFigura; //canviem la nova figura
 }
 
-void Joc::inicialitzaSeguentFigura()
+bool Joc::inicialitzaSeguentFigura()
 {
 	Figura novaFigura;
 
 	novaFigura = m_nextFigures->getFigura();
 	m_nextFigures = m_nextFigures->getNext();
-	int fila = novaFigura.getPosicioY(), columna = novaFigura.getPosicioX();
-	m_tauler.introdueixFigura(columna, fila, novaFigura);
+
+		int fila = novaFigura.getPosicioY(), columna = novaFigura.getPosicioX();
+		m_tauler.introdueixFigura(columna, fila, novaFigura);
 
 	m_figuraActual = novaFigura; //canviem la nova figura
+	
+	if (m_nextFigures != nullptr)
+	{
+		return 0;
+	}
+	else
+	{
+		return 1;
+	}
 }
 
 
@@ -166,8 +176,8 @@ void Joc::inicialitzaTauler(string nomFitxer)
 		m_figuraActual.setRotacio(rotacio);
 		m_figuraActual.setPosicioX(columna - 1);
 		m_figuraActual.setPosicioY(fila - 1);
-		Figura figuraActual(columna - 1, fila - 1, tipus, rotacio);
-		figuraActual.setMatriuFigura(tipus, rotacio);
+		m_figuraActual.setMatriuFigura(tipus, rotacio);
+
 
 		ColorFigura color;
 		int i_color;
@@ -222,7 +232,7 @@ void Joc::inicialitzaTauler(string nomFitxer)
 				m_tauler.setPosicio(j, i, color);
 			}
 		}
-		m_tauler.introdueixFigura(columna - 1, fila - 1, figuraActual);
+		m_tauler.introdueixFigura(columna - 1, fila - 1, m_figuraActual);
 
 
 	}
@@ -504,7 +514,7 @@ int Joc::baixaFiguraComplet()
 
 	}
 
-	return n_filesCompletades;
+	return n_filesCompletades*100;
 }
 
 

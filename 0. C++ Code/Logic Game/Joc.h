@@ -35,7 +35,7 @@ public:
 	void inicialitzaTauler(string nomFitxer);
 	void inicialitzaLlistaFigures(const string& nomFitxerFigures);
 	void inicialitzaLlistaMoviments(const string& nomFitxerMoviments);
-	void inicialitzaSeguentFigura();
+	bool inicialitzaSeguentFigura();
 
 	//Nodes
 	void afegeixLlistaFigura(Figura figura);

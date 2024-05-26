@@ -7,6 +7,8 @@
 #include "GraphicManager.h"
 #include "InfoJoc.h"
 #include <windows.h>
+#include <list>
+#include "Classificacio.h"
 
 using namespace std;
 
@@ -20,10 +22,14 @@ class Partida
 {
 public:
     Partida();
-    void inicialitza(int mode, const string& fitxerInicial, const string& fitxerFigures, const string& fitxerMoviments);
+    void inicialitza(int mode, const string& fitxerInicial, const string& fitxerFigures, const string& fitxerMoviments, const string& fitxerClassificacio, int opcio);
     void actualitza(double deltaTime);
     int getMode() { return m_modeJoc; }
     EstatPartida getEstatPartida() { return m_estatPartida; }
+    void afegeixClassificacio();
+    void mostraClassificacio();
+    void guardarClassificacio(string fitxerIn);
+    void recuperaClassificacio(string fitxerIn);
 private:
     double m_temps;
     double deltaTime;
@@ -37,6 +43,9 @@ private:
     float m_velocitat;
     EstatPartida m_estatPartida;
     bool m_movimentFinal;
+    bool m_endFigures;
+    list<Classificacio> m_classificacio;
+
 
 };
 
