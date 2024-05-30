@@ -30,6 +30,7 @@ public:
     void mostraClassificacio();
     void guardarClassificacio(string fitxerIn);
     void recuperaClassificacio(string fitxerIn);
+    void esborrarClassificacio();
 private:
     double m_temps;
     double deltaTime;

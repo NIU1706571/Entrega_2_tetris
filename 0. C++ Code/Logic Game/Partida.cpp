@@ -22,6 +22,13 @@ Partida::Partida()
     */
 }
 
+void Partida::esborrarClassificacio()
+{
+    m_classificacio.clear();
+    guardarClassificacio("./data/Games/fitxerClassificacio.txt");
+
+}
+
 void Partida::inicialitza(int mode, const string& fitxerInicial, const string& fitxerFigures, const string& fitxerMoviments, const string& fitxerClassificacio, int opcio)
 {
     m_modeJoc = mode;
@@ -31,7 +38,7 @@ void Partida::inicialitza(int mode, const string& fitxerInicial, const string& f
     m_contadorActual = 1;
     m_estatPartida = ENJOC;
 
-    if (opcio == 1 || opcio == 0)
+    if (opcio == 1 || opcio == 2)
     {
         m_joc.inicialitza(fitxerInicial, fitxerFigures, fitxerMoviments, mode);
     }
@@ -198,7 +205,11 @@ void Partida::afegeixClassificacio()
         actual = m_classificacio.begin();
     auto
         ultim = m_classificacio.end();
-
+    
+    if (m_classificacio.begin()->getNom() == "Classificacio" && m_classificacio.begin()->getPuntuacio() == 0)
+    {
+        m_classificacio.clear();
+    }
     if (m_classificacio.empty())
     {
         Classificacio newClas(nom, m_puntuacioActual);
@@ -258,15 +269,22 @@ void Partida::guardarClassificacio(string fitxerIn)
     
     if (fitxer.is_open())
     {
-        auto
-            actual = m_classificacio.begin();
-        auto
-            final = m_classificacio.end();
+        if (m_classificacio.empty() == false)
+        {
+            auto
+                actual = m_classificacio.begin();
+            auto
+                final = m_classificacio.end();
 
-        do {
-            fitxer << actual->getNom() << " " << actual->getPuntuacio() << endl;
-            actual++;
-        } while (actual != final);
+            do {
+                fitxer << actual->getNom() << " " << actual->getPuntuacio() << endl;
+                actual++;
+            } while (actual != final);
+        }
+        else
+        {
+            fitxer << "Classificacio " << " " << 0 << endl;
+        }
     }
     else
     {
