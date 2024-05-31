@@ -36,6 +36,7 @@ public:
 	void inicialitzaLlistaFigures(const string& nomFitxerFigures);
 	void inicialitzaLlistaMoviments(const string& nomFitxerMoviments);
 	bool inicialitzaSeguentFigura();
+	int comprovaIBorraFiles();
 
 	//Nodes
 	void afegeixLlistaFigura(Figura figura);

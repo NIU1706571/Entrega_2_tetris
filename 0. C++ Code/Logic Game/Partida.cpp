@@ -94,7 +94,9 @@ void Partida::actualitza(double deltaTime)
             }
             else if (m_joc.getTauler().comprovaCaiguda(figura_actual, figura_actual.getPosicioX(), figura_actual.getPosicioY()) == 0)
             {
+                m_puntuacioActual += m_joc.comprovaIBorraFiles();
                 m_joc.inicialitzaNovaFigura();
+                
             }
             
 
@@ -164,6 +166,7 @@ void Partida::actualitza(double deltaTime)
                         }
                         else if (m_joc.getTauler().comprovaCaiguda(figura_actual, figura_actual.getPosicioX(), figura_actual.getPosicioY()) == 0 && m_endFigures == 0)
                         {
+                            m_puntuacioActual += m_joc.comprovaIBorraFiles();
                             m_endFigures = m_joc.inicialitzaSeguentFigura();
                         }
 

@@ -8,6 +8,8 @@ void Joc::inicialitzaNovaFigura()
 	int randomTipus = rand() % 7;
 	srand(time(NULL));
 	int randomRotacio = rand() % 4;
+	srand(time(NULL));
+	int randomX = rand() % 7;
 	TipusFigura tipus;
 	ColorFigura color;
 	
@@ -62,10 +64,10 @@ void Joc::inicialitzaNovaFigura()
 	novaFigura.setTipus(tipus);
 	novaFigura.setRotacio(randomRotacio);
 	novaFigura.setMatriuFigura(tipus, randomRotacio);
-	novaFigura.setPosicioX(columna);
+	novaFigura.setPosicioX(randomX);
 	novaFigura.setPosicioY(fila);
 	novaFigura.setColor(color);
-	m_tauler.introdueixFigura(columna, fila, novaFigura);
+	m_tauler.introdueixFigura(randomX, fila, novaFigura);
 
 	m_figuraActual = novaFigura; //canviem la nova figura
 }
@@ -467,21 +469,6 @@ int Joc::baixaFigura()
 		m_tauler.baixaFigura(m_figuraActual.getPosicioX(), m_figuraActual.getPosicioY(), m_figuraActual);
 	}
 
-	//comprovem si hi ha alguna fila ja feta
-	for (int i = 0; i < MAX_FILA; i++) //podem tenir un màx de 8 files repetides
-	{
-		int fila = m_tauler.comprovaFilaCompleta();
-
-		if (fila != -1)
-		{
-			m_tauler.baixaFila(fila);
-			m_figuraActual.setPosicioY(m_figuraActual.getPosicioY() + 1); //també baixa 1 la figura.
-			m_figuraActual.borrarFila();
-			m_figuraActual.setMaxY(m_figuraActual.getMaxY() - 1);
-			n_filesCompletades++;
-		}
-
-	}
 
 	return n_filesCompletades;
 
@@ -499,6 +486,28 @@ int Joc::baixaFiguraComplet()
 	}
 
 	//comprovem si hi ha alguna fila ja feta
+
+		for (int i = 0; i < MAX_FILA; i++) //podem tenir un màx de 8 files repetides
+		{
+			int fila = m_tauler.comprovaFilaCompleta();
+
+			if (fila != -1)
+			{
+				m_tauler.baixaFila(fila);
+				m_figuraActual.setPosicioY(m_figuraActual.getPosicioY() + 1); //també baixa 1 la figura.
+				m_figuraActual.borrarFila();
+				m_figuraActual.setMaxY(m_figuraActual.getMaxY() - 1);
+				n_filesCompletades++;
+			}
+
+		}
+
+	return n_filesCompletades*100;
+}
+
+int Joc::comprovaIBorraFiles()
+{
+	int n_filesCompletades = 0;
 	for (int i = 0; i < MAX_FILA; i++) //podem tenir un màx de 8 files repetides
 	{
 		int fila = m_tauler.comprovaFilaCompleta();
@@ -514,8 +523,9 @@ int Joc::baixaFiguraComplet()
 
 	}
 
-	return n_filesCompletades*100;
+	return n_filesCompletades;
 }
+
 
 
 bool Joc::mouFigura(int dirX)

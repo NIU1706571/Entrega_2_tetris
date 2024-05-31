@@ -155,8 +155,8 @@ int main(int argc, const char* argv[])
         {
 
         Partida game;
-        //game.inicialitza(mode, "./data/Games/partida.txt", "./data/Games/fitxerFigures.txt", "./data/Games/fitxerMoviments.txt");
-        game.inicialitza(mode, fitxerPartida, fitxerFigures, fitxerMoviments, "./data/Games/fitxerClassificacio.txt", opcio);
+        game.inicialitza(mode, "./data/Games/partida.txt", "./data/Games/fitxerFigures.txt", "./data/Games/fitxerMoviments.txt", "./data/Games/fitxerClassificacio.txt", opcio);
+        //game.inicialitza(mode, fitxerPartida, fitxerFigures, fitxerMoviments, "./data/Games/fitxerClassificacio.txt", opcio);
 
         if (opcio == 3)
         {
