@@ -38,7 +38,8 @@ private:
     int m_nivell;
     int m_modeJoc;
     int m_puntuacioActual;
-    int m_contadorActual;;
+    int m_contadorActual;
+    int m_puntuacioAux;
     string m_fitxer;
     Joc m_joc;
     bool m_partidaIniciada;

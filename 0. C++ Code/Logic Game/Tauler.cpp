@@ -89,14 +89,6 @@ bool const Tauler::comprovaCaiguda(Figura& figura, int pos_x, int pos_y)
 	}
 
 
-	/*if (potCaure == 1)
-	{
-		cout << endl << "La figura pot caure!!!!!!!" << endl;
-}
-	else
-	{
-		cout << endl << "La figura NO POT CAURE" << endl;
-	} */
 	return potCaure;
 
 
@@ -502,6 +494,7 @@ bool const Tauler::comprovaGir(Figura& figura, int pos_x, int pos_y, DireccioGir
 	{
 		borraFigura(figura.getPosicioX(), figura.getPosicioY(), figura);
 		Figura figuraTemp;
+
 		if (direccio == GIR_HORARI)
 		{
 			if (figura.getRotacio() == 0)
@@ -552,7 +545,6 @@ bool const Tauler::comprovaGir(Figura& figura, int pos_x, int pos_y, DireccioGir
 			{
 				for (int j = 0; j < figura.getMaxY(); j++)
 				{
-					//cout << m_posicions[pos_y + j][pos_x + i] << endl;
 					if ((figuraTemp.getPosicioMatriu(i, j) != NO_COLOR) && (m_posicions[pos_y + j][pos_x + i] != NO_COLOR))
 					{
 						potGirar = 0;
@@ -568,62 +560,3 @@ bool const Tauler::comprovaGir(Figura& figura, int pos_x, int pos_y, DireccioGir
 
 
 }
-
-/*
-ifstream& operator>>(ifstream& input, Tauler& tauler)
-{
-
-	ColorFigura color;
-	int i_color;
-
-
-	for (int i = 0; i < MAX_FILA; i++) // FILES
-	{
-		for (int j = 0; j < MAX_COL; j++) // COLUMNES
-		{
-			input >> i_color;
-
-			switch (i_color)
-			{
-			case 0:
-				color = NO_COLOR;
-				break;
-
-			case 1:
-				color = COLOR_GROC;
-				break;
-
-			case 2:
-				color = COLOR_BLAUCEL;
-				break;
-
-			case 3:
-				color = COLOR_MAGENTA;
-				break;
-
-			case 4:
-				color = COLOR_TARONJA;
-				break;
-
-			case 5:
-				color = COLOR_BLAUFOSC;
-				break;
-
-			case 6:
-				color = COLOR_VERMELL;
-				break;
-
-			case 7:
-				color = COLOR_VERD;
-				break;
-
-			}
-
-			tauler.setPosicio(j, i, color);
-		}
-	}
-
-	return input;
-}
-
-*/

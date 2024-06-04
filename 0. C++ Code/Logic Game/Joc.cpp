@@ -3,13 +3,14 @@
 
 void Joc::inicialitzaNovaFigura()
 {
-
+	//randoms:
 	srand(time(NULL));
 	int randomTipus = rand() % 7;
 	srand(time(NULL));
 	int randomRotacio = rand() % 4;
 	srand(time(NULL));
 	int randomX = rand() % 7;
+
 	TipusFigura tipus;
 	ColorFigura color;
 	
@@ -59,14 +60,17 @@ void Joc::inicialitzaNovaFigura()
 	int columna = 6, fila = 0;
 
 	Figura novaFigura;
+
 	if (tipus == FIGURA_O)
-		randomRotacio = 0;
+		randomRotacio = 0; //la rotació del quadrat ha de ser sempre 0
+
 	novaFigura.setTipus(tipus);
 	novaFigura.setRotacio(randomRotacio);
 	novaFigura.setMatriuFigura(tipus, randomRotacio);
 	novaFigura.setPosicioX(randomX);
 	novaFigura.setPosicioY(fila);
 	novaFigura.setColor(color);
+
 	m_tauler.introdueixFigura(randomX, fila, novaFigura);
 
 	m_figuraActual = novaFigura; //canviem la nova figura
@@ -379,8 +383,8 @@ void Joc::inicialitza(const string& nomFitxerTauler, const string& nomFitxerFigu
 {
 	if (mode == 0)
 	{
-		m_tauler.inicialitzaTauler();
-		inicialitzaNovaFigura();
+		m_tauler.inicialitzaTauler(); //inicialitzem el nou tauler
+		inicialitzaNovaFigura(); //i la nova figura si mode normal
 		
 
 	}
@@ -502,7 +506,7 @@ int Joc::baixaFiguraComplet()
 
 		}
 
-	return n_filesCompletades*100;
+	return n_filesCompletades;
 }
 
 int Joc::comprovaIBorraFiles()
@@ -530,8 +534,6 @@ int Joc::comprovaIBorraFiles()
 
 bool Joc::mouFigura(int dirX)
 {
-
-
 	if (m_tauler.comprovaMoviment(m_figuraActual, m_figuraActual.getPosicioX(), m_figuraActual.getPosicioY(), dirX) == 1)
 	{
 		m_tauler.mouFigura(m_figuraActual.getPosicioX(), m_figuraActual.getPosicioY(), m_figuraActual, dirX);
@@ -543,6 +545,7 @@ bool Joc::mouFigura(int dirX)
 		return 0;
 	}
 }
+
 
 bool Joc::giraFigura(DireccioGir direccio)
 {
@@ -560,8 +563,6 @@ bool Joc::giraFigura(DireccioGir direccio)
 	{
 		return 0;
 	}
-
-
 }
 
 void Joc::actualitza(double deltaTime)
@@ -575,11 +576,6 @@ void Joc::dibuixa()
 	GraphicManager::getInstance()->drawSprite(GRAFIC_FONS, 0, 0, false);
 	GraphicManager::getInstance()->drawSprite(GRAFIC_TAULER, POS_X_TAULER, POS_Y_TAULER, false);
 	m_tauler.dibuixaPeces();
-
-
-
-
-
 }
 
 bool Joc::xocFigura()
@@ -587,32 +583,6 @@ bool Joc::xocFigura()
 	if (m_tauler.comprovaCaiguda(m_figuraActual, m_figuraActual.getPosicioX(), m_figuraActual.getPosicioY()) == 0 && (m_figuraActual.getPosicioY() == 0 || m_figuraActual.getPosicioY() == 1))
 	{
 		return 1;
-		/*
-		bool xoca = 0;
-		int pos_x = m_figuraActual.getPosicioX();
-		int pos_y = m_figuraActual.getPosicioY();
-		for (int i = 0; i < m_figuraActual.getMaxX(); i++)
-		{
-			for (int j = 0; j < m_figuraActual.getMaxY(); j++)
-			{
-				//cout << m_posicions[pos_y + j][pos_x + i] << endl;
-				if ((m_figuraActual.getPosicioMatriu(i, j) != NO_COLOR) && (m_tauler.getPosicio(pos_x + i, pos_y + j) != NO_COLOR))
-				{
-					xoca = 1;
-				}
-			}
-		}
-
-		if (xoca == 1)
-		{
-			return 1;
-		}
-		else
-		{
-			return 0;
-		}
-		*/
-
 	}
 	else
 	{

@@ -33,23 +33,27 @@ void Partida::inicialitza(int mode, const string& fitxerInicial, const string& f
 {
     m_modeJoc = mode;
     m_nivell = 1;
-    m_puntuacioActual = 1;
+    m_puntuacioActual = 0;
     m_temps = 0;
     m_contadorActual = 1;
     m_estatPartida = ENJOC;
+    m_puntuacioAux = 0;
 
-    if (opcio == 1 || opcio == 2)
+    if (opcio == 1 || opcio == 2) //si està al mode test o mode normal, inicialitza tot
     {
         m_joc.inicialitza(fitxerInicial, fitxerFigures, fitxerMoviments, mode);
     }
+
     m_endFigures = 0;
-    recuperaClassificacio(fitxerClassificacio);
+    recuperaClassificacio(fitxerClassificacio); //recuperem la classificació del fitxer
 
 }
 
 void Partida::actualitza(double deltaTime)
 {
-    if (m_estatPartida == ENJOC)
+    int puntuacioAux = 0;
+    bool space = 0;
+    if (m_estatPartida == ENJOC) //quan no s'hagi acabat la partida
     {
         if (m_modeJoc == 0) // mode normal
         {
@@ -62,7 +66,7 @@ void Partida::actualitza(double deltaTime)
             {
                 m_joc.mouFigura(-1);
             }
-            else if (Keyboard_GetKeyTrg(KEYBOARD_UP) || Keyboard_GetKeyTrg(KEYBOARD_E))
+            else if (Keyboard_GetKeyTrg(KEYBOARD_UP) || Keyboard_GetKeyTrg(KEYBOARD_W))
             {
                 m_joc.giraFigura(GIR_HORARI);
             }
@@ -72,8 +76,11 @@ void Partida::actualitza(double deltaTime)
             }
             else if (Keyboard_GetKeyTrg(KEYBOARD_SPACE) || Keyboard_GetKeyTrg(KEYBOARD_E))
             {
-                m_puntuacioActual += m_joc.baixaFiguraComplet();
-                m_puntuacioActual += 10;
+                puntuacioAux += 10*m_joc.baixaFiguraComplet();
+                puntuacioAux += 10;
+                m_puntuacioAux += puntuacioAux;
+                m_puntuacioActual += puntuacioAux;
+                space = 1;
             }
             else if (Keyboard_GetKeyTrg(KEYBOARD_ESCAPE))
             {
@@ -81,7 +88,9 @@ void Partida::actualitza(double deltaTime)
             }
             else if (m_temps > 1)
             {
-                m_puntuacioActual += m_joc.baixaFigura();
+                puntuacioAux += 10*m_joc.baixaFigura();
+                m_puntuacioAux += puntuacioAux;
+                m_puntuacioActual += puntuacioAux;
                 m_temps = 0;
             }
             Figura figura_actual = m_joc.getFigura();
@@ -91,21 +100,28 @@ void Partida::actualitza(double deltaTime)
             if (m_joc.xocFigura() == 1)
             {
                 m_estatPartida = ACABADA;
+
             }
             else if (m_joc.getTauler().comprovaCaiguda(figura_actual, figura_actual.getPosicioX(), figura_actual.getPosicioY()) == 0)
             {
-                m_puntuacioActual += m_joc.comprovaIBorraFiles();
+
+                puntuacioAux += 10 * m_joc.comprovaIBorraFiles();
+                if (space == 0)
+                {
+                    m_puntuacioAux += puntuacioAux + 10;
+                    m_puntuacioActual += puntuacioAux;
+                }
+
                 m_joc.inicialitzaNovaFigura();
                 
             }
             
 
-            if (m_puntuacioActual % 3 == 0)
+            if (m_puntuacioAux >= 100)
             {
                 m_nivell++;
-                m_puntuacioActual++;
+                m_puntuacioAux = 0;
             }
-
 
 
         }
@@ -120,13 +136,16 @@ void Partida::actualitza(double deltaTime)
                 if (m_temps > 1)
                 {
 
-                    if (mov_actual == nullptr && m_endFigures == 1)
+                    if (mov_actual == nullptr && m_endFigures == 1 || mov_actual == nullptr)
                     {
                         m_movimentFinal = 1; // si ja no hi ha més moviments posem final = 1 per acabar amb el bucle al final de la partida
                         m_estatPartida = ACABADA; //i acabem la partida
+                        cout << "Partida test finalitzada" << endl;
                     }
                     else
                     {
+
+
                         switch (mov_actual->getMoviment())
                         {
                         case MOVIMENT_ESQUERRA:
@@ -147,12 +166,17 @@ void Partida::actualitza(double deltaTime)
                             break;
 
                         case MOVIMENT_BAIXA:
-                            m_puntuacioActual += m_joc.baixaFigura();
+                            puntuacioAux += 10 * m_joc.baixaFigura();
+                            m_puntuacioAux += puntuacioAux;
+                            m_puntuacioActual += puntuacioAux;
                             break;
 
                         case MOVIMENT_BAIXA_FINAL:
-                            m_puntuacioActual += m_joc.baixaFiguraComplet();
-                            m_puntuacioActual += 10;
+                            puntuacioAux += 10 * m_joc.baixaFiguraComplet();
+                            puntuacioAux += 10;
+                            m_puntuacioAux += puntuacioAux;
+                            m_puntuacioActual += puntuacioAux;
+                            space = 1;
                             break;
 
                         }
@@ -160,21 +184,26 @@ void Partida::actualitza(double deltaTime)
                         m_joc.seguentMoviment();
 
                         Figura figura_actual = m_joc.getFigura();
-                        if (m_joc.xocFigura() == 1)
+                        if (m_joc.xocFigura() == 1 || Keyboard_GetKeyTrg(KEYBOARD_ESCAPE))
                         {
                             m_estatPartida = ACABADA;
                         }
                         else if (m_joc.getTauler().comprovaCaiguda(figura_actual, figura_actual.getPosicioX(), figura_actual.getPosicioY()) == 0 && m_endFigures == 0)
                         {
-                            m_puntuacioActual += m_joc.comprovaIBorraFiles();
+                            puntuacioAux += 10 * m_joc.comprovaIBorraFiles();
+                            if (space == 0)
+                            {
+                                m_puntuacioAux += puntuacioAux + 10;
+                                m_puntuacioActual += puntuacioAux;
+                            }
                             m_endFigures = m_joc.inicialitzaSeguentFigura();
                         }
 
 
-                        if (m_puntuacioActual % 3 == 0)
+                        if (m_puntuacioAux >= 100)
                         {
                             m_nivell++;
-                            m_puntuacioActual++;
+                            m_puntuacioAux = 0;
                         }
                     }
 
@@ -186,7 +215,7 @@ void Partida::actualitza(double deltaTime)
 
     }
     m_joc.dibuixa();
-    string msg = "Puntuació:" + to_string(m_puntuacioActual) + " Nivell:" + to_string(m_estatPartida);
+    string msg = "Puntuacio:" + to_string(m_puntuacioActual) + " Nivell:" + to_string(m_nivell);
     GraphicManager::getInstance()->drawFont(FONT_GREEN_30, POS_X_TAULER, POS_Y_TAULER - 90, 1.0, msg);
 
 
@@ -211,18 +240,19 @@ void Partida::afegeixClassificacio()
     
     if (m_classificacio.begin()->getNom() == "Classificacio" && m_classificacio.begin()->getPuntuacio() == 0)
     {
-        m_classificacio.clear();
+        m_classificacio.clear(); //si està buida (nom = classificacio i puntuació = 0) hem de borrar-la abans.
     }
+
     if (m_classificacio.empty())
     {
         Classificacio newClas(nom, m_puntuacioActual);
-        m_classificacio.push_front(newClas);
+        m_classificacio.push_front(newClas); //si està buida ho posem al principi
     }
     else
     {
         while (actual != ultim && !trobat)
         {
-            if (actual->getPuntuacio() > m_puntuacioActual)
+            if (actual->getPuntuacio() > m_puntuacioActual) //sinó busquem la posició on ha d'anar
             {
                 trobat = true;
             }
@@ -256,11 +286,13 @@ void Partida::mostraClassificacio()
     int contador = 1;
 
     cout << "== Classificacio ==" << endl;
+
     do {
         cout << contador << ". " << actual->getNom() << " " << actual->getPuntuacio() << endl;
         actual++;
         contador++;
     } while (actual != final && contador <= 10);
+
     cout << endl;
 }
 
